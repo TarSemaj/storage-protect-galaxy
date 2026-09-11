@@ -5,7 +5,7 @@
 
 **Version**: 1.0
 
-**Last Updated**: 2026-08-27
+**Last Updated**: 2026-09-10
 
 **Target Audience**: Storage Architects, System Administrators, Data Protection Engineers
 
@@ -45,9 +45,9 @@ This solution is particularly applicable for users of IBM Storage Protect Plus w
 ### Solution Components
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph LR
-    A[IBM Storage Defender Data Protect Cluster] -->|S3 Protocol, Glacier Storage Class| B[IBM Storage Protect Object Agent] -->|Verb Protocol| C[IBM Storage Protect Server]
+    A[Data Protect Cluster] -->|S3 Protocol, Glacier Storage Class| B[Storage Protect Object Agent] -->|Verb Protocol| C[Storage Protect Server]
     C -->|Cold Data Cache| D[Disk-Based Storage Pool]
     D -->|Migration| E[Tape Storage Pool]
     E -->|Write| F[Tape Library / Drives]
@@ -83,14 +83,14 @@ Protection groups within the IBM Storage Defender Data Protect cluster are confi
 Initial backups are still performed to native, disk-resident IBM Storage Defender Data Protect cluster, with archives to "Tape Based" storage featuring a separate retention policy.
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TB
-    subgraph DP["IBM Storage Defender Data Protect Cluster"]
+    subgraph DP["Storage Defender Data Protect Cluster"]
         A[Primary Backups on Cluster Disk]
         B[Protection Groups with Tape-based External Target Policy]
     end
     
-    subgraph SP["IBM Storage Protect Server"]
+    subgraph SP["Storage Protect Server"]
         C[Object Agent S3 Interface]
         D[Cold Data Cache Disk Storage Pool]
         E[Tape Storage Pool as Next Storage Pool]
@@ -181,7 +181,7 @@ Data stored in the cold data cache storage pool cannot be immediately accessed v
 - IBM Storage Defender Data Protect protection group archives make use of S3 protocol "multi-part" objects for storing data. These objects are only "completed" by the protection job after all data for the protection group has been archived.
 - Therefore, the cold data cache (disk) storage pool must be large enough to fit all data for all protection group archives performed within the same window of time (see sizing considerations later in this document).
 
-![Object Agent Archive Flow](../images/ColdDataCacheMovement.png)
+![Object Agent Archive Flow](images/ColdDataCacheMovement.png)
 
 **Restore Flow (Tape → IBM Storage Defender Data Protect)**:
 
@@ -193,7 +193,7 @@ Data stored in the cold data cache storage pool cannot be immediately accessed v
 6. **Retention**: Data retained in cold cache for retention period (7 days by default, but is configurable)
 7. **Cleanup**: Data deleted from cold cache after retention period
 
-![Object Agent Restore Flow](../images/ColdDataCacheMovementRestore.png)
+![Object Agent Restore Flow](images/ColdDataCacheMovementRestore.png)
 
 ### Technology Stack
 
@@ -232,7 +232,7 @@ The following are some use cases that the integration of IBM Storage Defender Da
 - Compliance with retention policies
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 gantt
     title Backup and Archive Strategy
     dateFormat YYYY-MM-DD
@@ -364,9 +364,9 @@ When migrating from IBM Storage Protect Plus to IBM Storage Defender Data Protec
 ### Logical Architecture
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph TB
-    subgraph "IBM Storage Defender Data Protect Cluster"
+    subgraph "Storage Defender Data Protect Cluster"
         A1[Backup Sources - VMs, Files, Databases]
         A2[Protection Groups]
         A3[Storage Domains Cluster Disk]
@@ -381,7 +381,7 @@ graph TB
         N1[S3 API - HTTPS - TCP/IP Port 9000]
     end
     
-    subgraph "IBM Storage Protect Server"
+    subgraph "Storage Protect Server"
         B1[Object Agent S3 Server]
         B2[Object Domain]
         B3[Cold Data Cache Storage Pool]
@@ -423,19 +423,19 @@ graph TB
 ### Physical Architecture
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph TB
     subgraph "Data Center - Primary Site"
-        subgraph "IBM Storage Defender Data Protect Cluster"
-            DP1[Data Protect Node 1]
-            DP2[Data Protect Node 2]
-            DP3[Data Protect Node 3]
-            DP4[Data Protect Node N]
+        subgraph "Storage Defender Data Protect Cluster"
+            DP1[Node 1]
+            DP2[Node 2]
+            DP3[Node 3]
+            DP4[Node N]
         end
         
-        subgraph "IBM Storage Protect Infrastructure"
+        subgraph "Storage Protect Infrastructure"
             SP1[Object Agent Service]
-            SP2[IBM Storage Protect Server 8.1.20+]
+            SP2[Storage Protect Server 8.1.20+]
             SP3[Cold Cache Disk - Flash/SSD Recommended]
         end
         
@@ -477,10 +477,10 @@ graph TB
 #### Archive Operation Flow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 sequenceDiagram
-    participant DP as IBM Storage Defender Data Protect Cluster
-    participant OA as IBM Storage Protect Object Agent
+    participant DP as Storage Defender Data Protect Cluster
+    participant OA as Storage Protect Object Agent
     participant CC as Cold Data Cache Pool
     participant MP as Migration Process
     participant TP as Tape Storage Pool
@@ -507,10 +507,10 @@ sequenceDiagram
 #### Restore Operation Flow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 sequenceDiagram
-    participant DP as IBM Storage Defender Data Protect Cluster
-    participant OA as IBM Storage Protect Object Agent
+    participant DP as Storage Defender Data Protect Cluster
+    participant OA as Storage Protect Object Agent
     participant CC as Cold Data Cache Pool
     participant RP as Recall Process
     participant TP as Tape Storage Pool
@@ -618,7 +618,7 @@ sequenceDiagram
 **Example Organization**:
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph TD
     A[Production Environment 500 VMs] --> B[Protection Group 1: Critical Apps - 50 VMs]
     A --> C[Protection Group 2: Database Servers - 75 VMs]
@@ -674,7 +674,7 @@ Group VMs using the following criteria, listed in order of priority:
 | Monthly | Tape (via SP) | 7 years | Long-term retention, compliance |
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 gantt
     title Backup Retention Strategy
     dateFormat YYYY-MM-DD
@@ -769,7 +769,7 @@ DEFINE STGPOOL S3COLDCACHE
 
 #### IBM Storage Defender Data Protect Cluster Node Tuning
 
-For larger-scale protection group workloads similar to those described in the **Real-World Performance Test Results** section of this document, internal performance tuning based on the number of nodes in the cluster may be necessary to achieve optimal performance. In particular, internal options related to threading parallelism for archive operations may need to be adjusted to increase throughput.
+For larger-scale protection group workloads similar to those described in the **Real-World Test Configuration** section of this document, internal performance tuning based on the number of nodes in the cluster may be necessary to achieve optimal performance. In particular, internal options related to threading parallelism for archive operations may need to be adjusted to increase throughput.
 
 Currently, this tuning should be pursued with the assistance of IBM Storage Defender support.
 
@@ -1283,39 +1283,45 @@ aws --no-verify-ssl --endpoint-url https://<object agent HLA>:<object agent LLA/
 
 ### Configuration Diagram
 
+**Part 1 — IBM Storage Protect Setup (Steps 1.1 – 1.7)**
+
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
-    Start([Start Configuration]) --> SP1[Step 1: IBM Storage Protect Setup]
-    
-    SP1 --> SP1a[1.1 Define Cold Cache Pool]
-    SP1a --> SP1b[1.2 Verify Tape Pool]
+    Start([Start Configuration])
+    Start --> SP1a[1.1 Define Cold Data Cache Pool]
+    SP1a --> SP1b[1.2 Verify Tape Storage Pool]
     SP1b --> SP1c[1.3 Define Object Agent Server]
     SP1c --> SP1d[1.4 Install Object Agent Service]
     SP1d --> SP1e[1.5 Define Object Domain]
     SP1e --> SP1f[1.6 Register Object Client Node]
-    SP1f --> SP1h[Save Credentials!]
+    SP1f --> SP1h["⚠ Save S3 Credentials!"]
     SP1f --> SP1g[1.7 Create S3 Bucket]
-    
-    SP1g --> DP1[Step 2: IBM Storage Defender Data Protect Setup]
-    
-    DP1 --> DP1a[2.1 Access IBM Storage Defender Data Protect UI]
+    SP1g --> Continue([➜ Continue to Part 2])
+
+    style Start fill:#f0f9ff
+    style SP1h fill:#fff5f5
+    style Continue fill:#f0fff0
+```
+
+**Part 2 — Data Protect Setup & Verification (Steps 2.1 – 3.3)**
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+flowchart TD
+    DP1[Step 2: Data Protect Setup]
+    DP1 --> DP1a[2.1 Access Data Protect UI]
     DP1a --> DP1b[2.2 Register External Target]
     DP1b --> DP1c[2.3 Create Archival Policy]
     DP1c --> DP1d[2.4 Create Protection Groups]
     DP1d --> DP1e[2.5 Test Archive Operation]
-    
+
     DP1e --> V1[Step 3: Verification]
-    
-    V1 --> V1a[3.1 Verify IBM Storage Protect]
-    V1a --> V1b[3.2 Verify IBM Storage Defender Data Protect]
-    V1b --> V1c[3.3 Test End-to-End]
-    
-    V1c --> Done([Configuration Complete])
-    
-    style Start fill:#f0f9ff
-    style SP1 fill:#fffaf0
-    style SP1g fill:#fff5f5
+    V1 --> V1a[3.1 Verify Storage Protect Config]
+    V1a --> V1b[3.2 Verify Data Protect Config]
+    V1b --> V1c[3.3 Test End-to-End Workflow]
+    V1c --> Done([Configuration Complete ✓])
+
     style DP1 fill:#f0fff0
     style V1 fill:#f8f0ff
     style Done fill:#f0f9ff
@@ -1330,7 +1336,7 @@ flowchart TD
 #### Factors Affecting Archive Performance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 mindmap
   root((Archive Performance))
     Network
@@ -1396,7 +1402,7 @@ mindmap
 #### Factors Affecting Restore Performance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 mindmap
   root((Restore Performance))
     Tape Recall
@@ -1547,38 +1553,45 @@ Annual Requirement: 50 TiB × 12 = 600 TiB
 
 ### Configuration Diagram
 
+**Part 1 — IBM Storage Protect Setup (Steps 1.1 – 1.7)**
+
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
-    Start([Start Configuration]) --> SP1[Step 1: IBM Storage Protect Setup]
-    
-    SP1 --> SP1a[1.1 Define Cold Cache Pool]
-    SP1a --> SP1b[1.2 Verify Tape Pool]
+    Start([Start Configuration])
+    Start --> SP1a[1.1 Define Cold Data Cache Pool]
+    SP1a --> SP1b[1.2 Verify Tape Storage Pool]
     SP1b --> SP1c[1.3 Define Object Agent Server]
     SP1c --> SP1d[1.4 Install Object Agent Service]
     SP1d --> SP1e[1.5 Define Object Domain]
     SP1e --> SP1f[1.6 Register Object Client Node]
-    SP1f --> SP1g[Save Credentials!]
-    
-    SP1g --> DP1[Step 2: IBM Storage Defender Data Protect Setup]
-    
-    DP1 --> DP1a[2.1 Access IBM Storage Defender Data Protect UI]
+    SP1f --> SP1h["⚠ Save S3 Credentials!"]
+    SP1f --> SP1g[1.7 Create S3 Bucket]
+    SP1g --> Continue([➜ Continue to Part 2])
+
+    style Start fill:#f0f9ff
+    style SP1h fill:#fff5f5
+    style Continue fill:#f0fff0
+```
+
+**Part 2 — Data Protect Setup & Verification (Steps 2.1 – 3.3)**
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+flowchart TD
+    DP1[Step 2: Data Protect Setup]
+    DP1 --> DP1a[2.1 Access Data Protect UI]
     DP1a --> DP1b[2.2 Register External Target]
     DP1b --> DP1c[2.3 Create Archival Policy]
     DP1c --> DP1d[2.4 Create Protection Groups]
     DP1d --> DP1e[2.5 Test Archive Operation]
-    
+
     DP1e --> V1[Step 3: Verification]
-    
-    V1 --> V1a[3.1 Verify IBM Storage Protect]
-    V1a --> V1b[3.2 Verify IBM Storage Defender Data Protect]
-    V1b --> V1c[3.3 Test End-to-End]
-    
-    V1c --> Done([Configuration Complete])
-    
-    style Start fill:#f0f9ff
-    style SP1 fill:#fffaf0
-    style SP1g fill:#fff5f5
+    V1 --> V1a[3.1 Verify Storage Protect Config]
+    V1a --> V1b[3.2 Verify Data Protect Config]
+    V1b --> V1c[3.3 Test End-to-End Workflow]
+    V1c --> Done([Configuration Complete ✓])
+
     style DP1 fill:#f0fff0
     style V1 fill:#f8f0ff
     style Done fill:#f0f9ff
@@ -1586,70 +1599,71 @@ flowchart TD
 
 ---
 
-### Real-World Performance Test Results
+### Real-World Test Configuration
 
 #### Test Environment Overview
 
-The following performance test results were obtained from actual IBM Storage Defender Data Protect to IBM Storage Protect tape archival operations. These tests provide real-world benchmarks for planning and optimization.
+The following real-world IBM Storage Defender Data Protect and IBM Storage Protect test configuration was used to prove out the solution defined in this document. Key observations and performance guidance are provided here for reference.
 
-**Note: The "TLS Optimization" mentioned below requires use of the "Adaptive Secure Communication" feature of IBM Storage Protect version 8.2.2 or greater.**
+> **Note: Throughput values are expressed as approximate ranges rather than specific test-run figures to reflect the natural variability across hardware generations, network configurations, and workload profiles. Your specific results may vary.**
+
+> **Note: The "TLS Optimized" configuration mentioned below requires use of the "Adaptive Secure Communication" feature of IBM Storage Protect version 8.2.2 or greater.**
 
 **Test Configuration**:
 
 - **Data Protect Cluster**: 8 nodes
-- **IBM Storage Protect Server**: 1-2 servers (depending on test)
-- **Cold Cache Storage**: IBM FlashSystem 5200 with FCM4 flash modules
-- **Tape Technology**: LTO-8/LTO-9 drives
+- **IBM Storage Protect Server**: 1-2 servers (depending on configuration)
+- **Cold Cache Storage**: IBM FlashSystem with high-performance flash modules
+- **Tape Technology**: LTO-8 or LTO-9 drives
 - **Network**: High-speed dedicated network
-- **Test Data**: VM backups (100-600 VMs per test)
+- **Test Data**: VM backups ranging from small-scale (tens of VMs) to large-scale (hundreds of VMs)
 
 #### Performance Test Results Summary
 
-The table below shows key performance metrics from multiple test runs with varying configurations:
+The table below summarises the throughput ranges observed across several configuration variations. Values are intentionally expressed as ranges to convey realistic expectations without implying precision that would not generalise across different hardware and environments.
 
-| Test Label | VMs | Config Notes | Logical Data (TiB) | Physical Data (TiB) | Cache Write Time | Cache Throughput (MiB/s) | Total Time (incl. Tape) | Overall Throughput (MiB/s) |
-|------|-----|--------------|-------------------|-------------------|-----------------|------------------------|------------------------|---------------------------|
-| run3 | 100 | 1 target, FCM4 storage | 9.9 | 4.5 | 1h 39m | 1,739 (217/node) | 2h 57m | 977 (122/node) |
-| run4 | 200 | 1 target, FCM4 storage | 19.5 | 8.8 | 3h 26m | 1,655 (207/node) | 5h 59m | 949 (119/node) |
-| run5 | 100 | 1 target, optimized mount | 9.9 | 4.5 | 1h 40m | 1,737 (217/node) | 2h 51m | 1,012 (126/node) |
-| run6 | 200 | 2 targets, FCM4 storage | 19.7 | 9.0 | 3h 20m | 1,718 (215/node) | 5h 27m | 1,054 (132/node) |
-| run7 | 200 | 2 targets, 2 SP servers | 19.6 | 9.0 | 2h 21m | 2,436 (305/node) | 3h 45m | 1,522 (190/node) |
-| run11 | 100 | 200 obj agent sessions | 9.8 | 4.5 | 2h 9m | 1,325 (166/node) | 3h 24m | 1,189 (149/node) |
-| run16 | 100 | 32 MiB part size | 9.8 | 4.5 | 1h 55m | 1,493 (187/node) | 3h 37m | 789 (99/node) |
-| run18 | 100 | TLS optimized | 9.8 | 4.5 | 1h 4m | 2,670 (334/node) | - | - |
-| run19 | 600 | Large scale, stock agent | 58.8 | 27.0 | 13h 53m | 1,234 (154/node) | 14h 22m | 1,192 (149/node) |
-| run20 | 600 | Large scale, TLS optimized | 58.8 | 27.0 | 8h 34m | 1,999 (250/node) | 10h | 1,713 (214/node) |
+| Configuration Variant | Scale | Config Notes | Dedup Ratio (approx.) | Cache Write Throughput (aggregate) | Overall Throughput (incl. Tape) |
+|-----------------------|-------|--------------|-----------------------|------------------------------------|---------------------------------|
+| Baseline — 1 target | Small (100 VMs) | 1 external target, high-perf flash cache | ~45–50% | 1,500–1,800 MiB/s | 900–1,100 MiB/s |
+| Baseline — 1 target | Medium (200 VMs) | 1 external target, high-perf flash cache | ~45–50% | 1,500–1,800 MiB/s | 900–1,100 MiB/s |
+| Dual Targets | Medium (200 VMs) | 2 external targets, parallel operations | ~45–50% | 1,600–1,800 MiB/s | 1,000–1,100 MiB/s |
+| Dual SP Servers | Medium (200 VMs) | 2 IBM Storage Protect servers, load balancing | ~45–50% | 2,000–2,500 MiB/s | 1,400–1,600 MiB/s |
+| TLS Optimized — cache only | Small (100 VMs) | Adaptive Secure Communication enabled | ~45–50% | 2,500–2,800 MiB/s | — |
+| Large Scale — standard | Large (600 VMs) | Default object agent configuration | ~45–50% | 1,100–1,300 MiB/s | 1,100–1,300 MiB/s |
+| Large Scale — TLS optimized | Large (600 VMs) | Adaptive Secure Communication enabled | ~45–50% | 1,800–2,100 MiB/s | 1,600–1,800 MiB/s |
+
+> **Note**: Per-node throughput can be derived by dividing aggregate values by the number of cluster nodes (8 in this configuration). Tape migration typically reduces overall throughput to 50–70% of the cache write throughput, depending on tape drive count and MIGPROCESS settings.
 
 **Key Observations**:
 
-1. **Deduplication Ratio**: Physical data is typically 45-50% of logical data due to IBM Storage Defender Data Protect's deduplication
-2. **Cache Write Performance**: 1,200-2,400 MiB/s aggregate throughput to cold cache
-3. **Per-Node Performance**: 150-300 MiB/s per IBM Storage Defender Data Protect node
-4. **End-to-End Performance**: 800-1,500 MiB/s including tape migration
+1. **Deduplication Ratio**: Physical data is typically 45–50% of logical data due to IBM Storage Defender Data Protect's deduplication
+2. **Cache Write Performance**: 1,100–2,800 MiB/s aggregate throughput to cold cache depending on configuration
+3. **Per-Node Performance**: Approximately 150–350 MiB/s per IBM Storage Defender Data Protect node
+4. **End-to-End Performance**: 800–1,800 MiB/s including tape migration, depending on architecture
 5. **Scalability**: Performance scales well with multiple targets and IBM Storage Protect servers
 
 #### Detailed Performance Analysis
 
 **Best Performing Configurations**:
 
-| Configuration | Test | Cache Throughput | Overall Throughput | Key Success Factors |
-|--------------|------|-----------------|-------------------|-------------------|
-| **TLS Optimized** | run20 | 1,999 MiB/s | 1,713 MiB/s | Object agent TLS optimization, 600 VMs |
-| **Dual SP Servers** | run7 | 2,436 MiB/s | 1,522 MiB/s | 2 IBM Storage Protect servers, load balancing |
-| **Dual Targets** | run6 | 1,718 MiB/s | 1,054 MiB/s | 2 external targets, parallel operations |
-| **Optimized Mount** | run5 | 1,737 MiB/s | 1,012 MiB/s | FCM4 + mount options tuning |
+| Configuration | Scale | Cache Throughput (approx.) | Overall Throughput (approx.) | Key Success Factors |
+|---------------|-------|-----------------------------|-------------------------------|---------------------|
+| **TLS Optimized + Large Scale** | 600 VMs | ~1,800–2,100 MiB/s | ~1,600–1,800 MiB/s | Adaptive Secure Communication, large workload |
+| **Dual SP Servers** | 200 VMs | ~2,000–2,500 MiB/s | ~1,400–1,600 MiB/s | 2 IBM Storage Protect servers, load balancing |
+| **Dual External Targets** | 200 VMs | ~1,600–1,800 MiB/s | ~1,000–1,100 MiB/s | 2 external targets, parallel operations |
+| **Optimized Mount + Flash Cache** | 100 VMs | ~1,600–1,800 MiB/s | ~1,000–1,100 MiB/s | High-performance flash + mount options tuning |
 
 **Configuration Impact Analysis**:
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+
 graph TB
     subgraph "Performance Factors"
-        A[Base Configuration ~1,200 MiB/s]
-        B[TLS Optimization +60% improvement]
-        C[Dual SP Servers +40% improvement]
-        D[Dual Targets +20% improvement]
-        E[Storage Optimization +15% improvement]
+        A[Base Configuration — moderate throughput]
+        B[TLS Optimization ~50–60% improvement]
+        C[Dual SP Servers ~35–45% improvement]
+        D[Dual Targets ~15–20% improvement]
+        E[Storage Optimization ~10–15% improvement]
     end
     
     A --> B
@@ -1669,14 +1683,14 @@ Based on the test results, the following configurations provide optimal performa
 
 **1. Object Agent Configuration**:
 
-- **TLS Optimization**: Enables 60% performance improvement (run18, run20). Uses the "Adaptive Secure Communication" feature of IBM Storage Protect version 8.2.2 or above
-- **Session Count**: 100 sessions provides good balance (higher counts show diminishing returns)
+- **TLS Optimization**: Enables approximately 50–60% performance improvement. Uses the "Adaptive Secure Communication" feature of IBM Storage Protect version 8.2.2 or above
+- **Session Count**: 100 sessions provides a good balance — higher counts show diminishing returns
 - **Part Size**: 32 MiB part size recommended for optimal throughput
 
 **2. Architecture Scaling**:
 
-- **Single SP Server**: Suitable for up to 200 VMs, ~1,000 MiB/s throughput
-- **Dual SP Servers**: Recommended for 200+ VMs, ~1,500 MiB/s throughput
+- **Single SP Server**: Suitable for up to 200 VMs; expect moderate aggregate throughput in the 900–1,100 MiB/s range
+- **Dual SP Servers**: Recommended for 200+ VMs; expect roughly 40–50% higher throughput over a single-server deployment
 - **Multiple Targets**: Use 2 external targets for improved parallelism
 
 **3. Storage Configuration**:
@@ -1698,19 +1712,19 @@ Based on the test results, the following configurations provide optimal performa
 
 **Common Bottlenecks Identified**:
 
-1. **JFS2 Fragmentation** (run1, run2):
+1. **JFS2 Fragmentation**:
 
    - Impact: Severe performance degradation with overlapped 256 KiB I/O request pattern
    - Solution: Use SSD/Flash/NVMe disk for the cold data cache
 
-2. **Single IBM Storage Protect Server** (run4, run6):
+2. **Single IBM Storage Protect Server**:
 
-   - Impact: Limits throughput to ~1,000 MiB/s
+   - Impact: Caps aggregate throughput; a second server can increase throughput by 40–50%
    - Solution: Deploy dual IBM Storage Protect servers for load balancing
 
-3. **Default TLS Settings** (run19 vs run20):
+3. **Default TLS Settings**:
 
-   - Impact: 40% performance reduction
+   - Impact: Approximately 35–45% performance reduction compared to the optimized configuration
    - Solution: Make use of the "Adaptive Secure Communication" feature of IBM Storage Protect to reduce TLS overhead
 
 4. **Tape Migration Rate**:
@@ -1720,23 +1734,23 @@ Based on the test results, the following configurations provide optimal performa
 
 #### Capacity and Time Estimates
 
-Based on test results, use these estimates for planning:
+Based on test results, use these estimates for planning. Values are expressed as approximate ranges to reflect realistic variability across hardware and workload profiles.
 
 **Archive Time Estimates** (per 10 TiB logical data):
 
-| Configuration | Cache Write Time | Total Time (incl. Tape) | Throughput |
-|--------------|-----------------|------------------------|------------|
-| Basic (1 server) | ~2 hours | ~3 hours | ~950 MiB/s |
-| Optimized (1 server) | ~1.5 hours | ~2.5 hours | ~1,150 MiB/s |
-| Dual Servers | ~1 hour | ~1.5 hours | ~1,900 MiB/s |
+| Configuration | Cache Write Time (approx.) | Total Time incl. Tape (approx.) | Throughput Range |
+|--------------|----------------------------|---------------------------------|------------------|
+| Basic (1 server) | 1.5–2.5 hours | 2.5–3.5 hours | 900–1,100 MiB/s |
+| Optimized (1 server) | 1–2 hours | 2–3 hours | 1,000–1,300 MiB/s |
+| Dual Servers | 45 min–1.5 hours | 1–2 hours | 1,700–2,000 MiB/s |
 
 **Monthly Archive Capacity** (assuming 8-hour daily archive window):
 
-| Configuration | Daily Capacity | Monthly Capacity | Annual Capacity |
-|--------------|---------------|-----------------|----------------|
-| Basic | ~27 TiB | ~810 TiB | ~9.7 PiB |
-| Optimized | ~33 TiB | ~990 TiB | ~11.9 PiB |
-| Dual Servers | ~55 TiB | ~1,650 TiB | ~19.8 PiB |
+| Configuration | Daily Capacity (approx.) | Monthly Capacity (approx.) | Annual Capacity (approx.) |
+|--------------|--------------------------|----------------------------|---------------------------|
+| Basic | 25–30 TiB | 750–900 TiB | 9–11 PiB |
+| Optimized | 30–38 TiB | 900–1,140 TiB | 11–14 PiB |
+| Dual Servers | 50–60 TiB | 1,500–1,800 TiB | 18–22 PiB |
 
 ---
 
@@ -1897,7 +1911,7 @@ QUERY VOLHIST TYPE=DBFULL BEGIND=-1
 #### Tape Lifecycle
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px', 'fontFamily':'arial'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 stateDiagram-v2
     [*] --> Scratch: New Tape
     Scratch --> InUse: Assigned to Pool
@@ -2430,20 +2444,21 @@ SELECT * FROM S3_ARCHIVE_RESTORE
 ```
 
 #### IBM Storage Defender Data Protect CLI Commands
-**NOTE**: The following `iris_cli` commands are run from the Cohesity CLI, accessed either remotely or locally as described in the Cohesity CLI Reference Guide (accessible from within the https://docs.cohesity.com/ customer portal).
 
-# List External Targets
-```
+> **NOTE**: The following `iris_cli` commands are run from the Cohesity CLI, accessed either remotely or locally as described in the Cohesity CLI Reference Guide (accessible from within the https://docs.cohesity.com/ customer portal).
+
+##### List External Targets
+```bash
 iris_cli cluster list-external-targets
 ```
 
-# Update External Target
-```
+##### Update External Target
+```bash
 iris_cli cluster update-external-target --id target_id --parameters
 ```
 
-# Unregister External Target
-```
+##### Unregister External Target
+```bash
 iris_cli cluster unregister-external-target --id target_id
 ```
 

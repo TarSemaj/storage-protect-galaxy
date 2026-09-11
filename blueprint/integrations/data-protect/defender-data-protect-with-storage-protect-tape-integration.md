@@ -1797,7 +1797,7 @@ The table below summarises the throughput ranges observed across several configu
 **Configuration Impact Analysis**:
 
 ```mermaid
-
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph TB
     subgraph "Performance Factors"
         A[Base Configuration — moderate throughput]
@@ -1812,10 +1812,10 @@ graph TB
     A --> D
     A --> E
     
-    style B fill:#d0f0d0
-    style C fill:#c0e8f0
-    style D fill:#fff0c0
-    style E fill:#ffd0b0
+    style B fill:#d0f0d0,color:#000000
+    style C fill:#c0e8f0,color:#000000
+    style D fill:#fff0c0,color:#000000
+    style E fill:#ffd0b0,color:#000000
 ```
 
 #### Performance Tuning Recommendations

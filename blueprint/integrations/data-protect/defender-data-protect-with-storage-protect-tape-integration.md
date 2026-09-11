@@ -46,12 +46,16 @@ This solution is particularly applicable for users of IBM Storage Protect Plus w
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
-graph LR
-    A[Data Protect Cluster] -->|S3 Protocol, Glacier Storage Class| B[Storage Protect Object Agent] -->|Verb Protocol| C[Storage Protect Server]
-    C -->|Cold Data Cache| D[Disk-Based Storage Pool]
-    D -->|Migration| E[Tape Storage Pool]
-    E -->|Write| F[Tape Library / Drives]
-    
+graph TD
+    subgraph BG[" "]
+        A[Data Protect Cluster] -->|S3 Protocol, Glacier Storage Class| B[Storage Protect Object Agent]
+        B -->|Verb Protocol| C[Storage Protect Server]
+        C -->|Cold Data Cache| D[Disk-Based Storage Pool]
+        D -->|Migration| E[Tape Storage Pool]
+        E -->|Write| F[Tape Library / Drives]
+    end
+
+    style BG fill:white,stroke:#cccccc
     style A fill:#f0f9ff
     style B fill:#fffaf0
     style C fill:#fff5f5
@@ -232,7 +236,7 @@ The following are some use cases that the integration of IBM Storage Defender Da
 - Compliance with retention policies
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'sectionBkgColor':'#f0f9ff', 'altSectionBkgColor':'#fffaf0', 'gridColor':'#cccccc', 'todayLineColor':'#ff6666'}}}%%
 gantt
     title Backup and Archive Strategy
     dateFormat YYYY-MM-DD
@@ -477,7 +481,7 @@ graph TB
 #### Archive Operation Flow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'actorBkg':'#f0f9ff', 'actorBorder':'#333333', 'actorTextColor':'#333333', 'actorLineColor':'#333333', 'noteBkgColor':'#fffaf0', 'noteBorderColor':'#cccccc', 'signalColor':'#333333', 'signalTextColor':'#333333'}}}%%
 sequenceDiagram
     participant DP as Storage Defender Data Protect Cluster
     participant OA as Storage Protect Object Agent
@@ -507,7 +511,7 @@ sequenceDiagram
 #### Restore Operation Flow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'actorBkg':'#f0f9ff', 'actorBorder':'#333333', 'actorTextColor':'#333333', 'actorLineColor':'#333333', 'noteBkgColor':'#fffaf0', 'noteBorderColor':'#cccccc', 'signalColor':'#333333', 'signalTextColor':'#333333'}}}%%
 sequenceDiagram
     participant DP as Storage Defender Data Protect Cluster
     participant OA as Storage Protect Object Agent
@@ -620,15 +624,18 @@ sequenceDiagram
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph TD
-    A[Production Environment 500 VMs] --> B[Protection Group 1: Critical Apps - 50 VMs]
-    A --> C[Protection Group 2: Database Servers - 75 VMs]
-    A --> D[Protection Group 3: File Servers - 100 VMs]
-    A --> E[Protection Group 4: Web Servers - 100 VMs]
-    A --> F[Protection Group 5: Development - 100 VMs]
-    A --> G[Protection Group 6: Test Systems - 75 VMs]
-    
-    B & C & D & E & F & G --> H[Monthly Archive to Tape]
-    
+    subgraph BG[" "]
+        A[Production Environment 500 VMs] --> B[Protection Group 1: Critical Apps - 50 VMs]
+        A --> C[Protection Group 2: Database Servers - 75 VMs]
+        A --> D[Protection Group 3: File Servers - 100 VMs]
+        A --> E[Protection Group 4: Web Servers - 100 VMs]
+        A --> F[Protection Group 5: Development - 100 VMs]
+        A --> G[Protection Group 6: Test Systems - 75 VMs]
+        
+        B & C & D & E & F & G --> H[Monthly Archive to Tape]
+    end
+
+    style BG fill:white,stroke:#cccccc
     style A fill:#f0f9ff
     style B fill:#fff5f5
     style C fill:#fff5f5
@@ -674,7 +681,7 @@ Group VMs using the following criteria, listed in order of priority:
 | Monthly | Tape (via SP) | 7 years | Long-term retention, compliance |
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'sectionBkgColor':'#f0f9ff', 'altSectionBkgColor':'#fffaf0', 'gridColor':'#cccccc', 'todayLineColor':'#ff6666'}}}%%
 gantt
     title Backup Retention Strategy
     dateFormat YYYY-MM-DD
@@ -1288,17 +1295,20 @@ aws --no-verify-ssl --endpoint-url https://<object agent HLA>:<object agent LLA/
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
-    Start([Start Configuration])
-    Start --> SP1a[1.1 Define Cold Data Cache Pool]
-    SP1a --> SP1b[1.2 Verify Tape Storage Pool]
-    SP1b --> SP1c[1.3 Define Object Agent Server]
-    SP1c --> SP1d[1.4 Install Object Agent Service]
-    SP1d --> SP1e[1.5 Define Object Domain]
-    SP1e --> SP1f[1.6 Register Object Client Node]
-    SP1f --> SP1h["⚠ Save S3 Credentials!"]
-    SP1f --> SP1g[1.7 Create S3 Bucket]
-    SP1g --> Continue([➜ Continue to Part 2])
+    subgraph BG[" "]
+        Start([Start Configuration])
+        Start --> SP1a[1.1 Define Cold Data Cache Pool]
+        SP1a --> SP1b[1.2 Verify Tape Storage Pool]
+        SP1b --> SP1c[1.3 Define Object Agent Server]
+        SP1c --> SP1d[1.4 Install Object Agent Service]
+        SP1d --> SP1e[1.5 Define Object Domain]
+        SP1e --> SP1f[1.6 Register Object Client Node]
+        SP1f --> SP1h["⚠ Save S3 Credentials!"]
+        SP1f --> SP1g[1.7 Create S3 Bucket]
+        SP1g --> Continue([➜ Continue to Part 2])
+    end
 
+    style BG fill:white,stroke:#cccccc
     style Start fill:#f0f9ff
     style SP1h fill:#fff5f5
     style Continue fill:#f0fff0
@@ -1309,19 +1319,22 @@ flowchart TD
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
-    DP1[Step 2: Data Protect Setup]
-    DP1 --> DP1a[2.1 Access Data Protect UI]
-    DP1a --> DP1b[2.2 Register External Target]
-    DP1b --> DP1c[2.3 Create Archival Policy]
-    DP1c --> DP1d[2.4 Create Protection Groups]
-    DP1d --> DP1e[2.5 Test Archive Operation]
+    subgraph BG[" "]
+        DP1[Step 2: Data Protect Setup]
+        DP1 --> DP1a[2.1 Access Data Protect UI]
+        DP1a --> DP1b[2.2 Register External Target]
+        DP1b --> DP1c[2.3 Create Archival Policy]
+        DP1c --> DP1d[2.4 Create Protection Groups]
+        DP1d --> DP1e[2.5 Test Archive Operation]
 
-    DP1e --> V1[Step 3: Verification]
-    V1 --> V1a[3.1 Verify Storage Protect Config]
-    V1a --> V1b[3.2 Verify Data Protect Config]
-    V1b --> V1c[3.3 Test End-to-End Workflow]
-    V1c --> Done([Configuration Complete ✓])
+        DP1e --> V1[Step 3: Verification]
+        V1 --> V1a[3.1 Verify Storage Protect Config]
+        V1a --> V1b[3.2 Verify Data Protect Config]
+        V1b --> V1c[3.3 Test End-to-End Workflow]
+        V1c --> Done([Configuration Complete ✓])
+    end
 
+    style BG fill:white,stroke:#cccccc
     style DP1 fill:#f0fff0
     style V1 fill:#f8f0ff
     style Done fill:#f0f9ff
@@ -1558,17 +1571,20 @@ Annual Requirement: 50 TiB × 12 = 600 TiB
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
-    Start([Start Configuration])
-    Start --> SP1a[1.1 Define Cold Data Cache Pool]
-    SP1a --> SP1b[1.2 Verify Tape Storage Pool]
-    SP1b --> SP1c[1.3 Define Object Agent Server]
-    SP1c --> SP1d[1.4 Install Object Agent Service]
-    SP1d --> SP1e[1.5 Define Object Domain]
-    SP1e --> SP1f[1.6 Register Object Client Node]
-    SP1f --> SP1h["⚠ Save S3 Credentials!"]
-    SP1f --> SP1g[1.7 Create S3 Bucket]
-    SP1g --> Continue([➜ Continue to Part 2])
+    subgraph BG[" "]
+        Start([Start Configuration])
+        Start --> SP1a[1.1 Define Cold Data Cache Pool]
+        SP1a --> SP1b[1.2 Verify Tape Storage Pool]
+        SP1b --> SP1c[1.3 Define Object Agent Server]
+        SP1c --> SP1d[1.4 Install Object Agent Service]
+        SP1d --> SP1e[1.5 Define Object Domain]
+        SP1e --> SP1f[1.6 Register Object Client Node]
+        SP1f --> SP1h["⚠ Save S3 Credentials!"]
+        SP1f --> SP1g[1.7 Create S3 Bucket]
+        SP1g --> Continue([➜ Continue to Part 2])
+    end
 
+    style BG fill:white,stroke:#cccccc
     style Start fill:#f0f9ff
     style SP1h fill:#fff5f5
     style Continue fill:#f0fff0
@@ -1579,19 +1595,22 @@ flowchart TD
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
-    DP1[Step 2: Data Protect Setup]
-    DP1 --> DP1a[2.1 Access Data Protect UI]
-    DP1a --> DP1b[2.2 Register External Target]
-    DP1b --> DP1c[2.3 Create Archival Policy]
-    DP1c --> DP1d[2.4 Create Protection Groups]
-    DP1d --> DP1e[2.5 Test Archive Operation]
+    subgraph BG[" "]
+        DP1[Step 2: Data Protect Setup]
+        DP1 --> DP1a[2.1 Access Data Protect UI]
+        DP1a --> DP1b[2.2 Register External Target]
+        DP1b --> DP1c[2.3 Create Archival Policy]
+        DP1c --> DP1d[2.4 Create Protection Groups]
+        DP1d --> DP1e[2.5 Test Archive Operation]
 
-    DP1e --> V1[Step 3: Verification]
-    V1 --> V1a[3.1 Verify Storage Protect Config]
-    V1a --> V1b[3.2 Verify Data Protect Config]
-    V1b --> V1c[3.3 Test End-to-End Workflow]
-    V1c --> Done([Configuration Complete ✓])
+        DP1e --> V1[Step 3: Verification]
+        V1 --> V1a[3.1 Verify Storage Protect Config]
+        V1a --> V1b[3.2 Verify Data Protect Config]
+        V1b --> V1c[3.3 Test End-to-End Workflow]
+        V1c --> Done([Configuration Complete ✓])
+    end
 
+    style BG fill:white,stroke:#cccccc
     style DP1 fill:#f0fff0
     style V1 fill:#f8f0ff
     style Done fill:#f0f9ff
@@ -1911,7 +1930,7 @@ QUERY VOLHIST TYPE=DBFULL BEGIND=-1
 #### Tape Lifecycle
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'stateBkg':'#f0f9ff', 'stateEnd':'#333333', 'transitionColor':'#333333', 'labelColor':'#333333', 'attributeBackgroundColorOdd':'#f0f9ff', 'attributeBackgroundColorEven':'#fffaf0'}}}%%
 stateDiagram-v2
     [*] --> Scratch: New Tape
     Scratch --> InUse: Assigned to Pool

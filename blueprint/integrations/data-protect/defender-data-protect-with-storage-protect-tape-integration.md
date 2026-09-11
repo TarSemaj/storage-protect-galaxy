@@ -48,6 +48,7 @@ This solution is particularly applicable for users of IBM Storage Protect Plus w
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 graph TD
     subgraph BG[" "]
+        direction TB
         A[Data Protect Cluster] -->|S3 Protocol, Glacier Storage Class| B[Storage Protect Object Agent]
         B -->|Verb Protocol| C[Storage Protect Server]
         C -->|Cold Data Cache| D[Disk-Based Storage Pool]
@@ -87,37 +88,42 @@ Protection groups within the IBM Storage Defender Data Protect cluster are confi
 Initial backups are still performed to native, disk-resident IBM Storage Defender Data Protect cluster, with archives to "Tape Based" storage featuring a separate retention policy.
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'textColor':'#333333'}}}%%
 flowchart TB
-    subgraph DP["Storage Defender Data Protect Cluster"]
-        A[Primary Backups on Cluster Disk]
-        B[Protection Groups with Tape-based External Target Policy]
+    subgraph OUTER[" "]
+        direction TB
+
+        subgraph DP["Storage Defender Data Protect Cluster"]
+            A[Primary Backups on Cluster Disk]
+            B[Protection Groups with Tape-based External Target Policy]
+        end
+        
+        subgraph SP["Storage Protect Server"]
+            C[Object Agent S3 Interface]
+            D[Cold Data Cache Disk Storage Pool]
+            E[Tape Storage Pool as Next Storage Pool]
+        end
+        
+        subgraph TL["Tape Library"]
+            F[Tape Drives]
+            G[Tape Volumes]
+        end
+        
+        A --> B
+        B -->|Archive via S3 Glacier Storage Class| C
+        C -->|Store Temporarily| D
+        D -->|Migrate| E
+        E -->|Write| F
+        F -->|Store| G
+        
+        G -.->|Restore Request| F
+        F -.->|Recall| E
+        E -.->|Stage| D
+        D -.->|Retrieve via S3| C
+        C -.->|Restore| B
     end
     
-    subgraph SP["Storage Protect Server"]
-        C[Object Agent S3 Interface]
-        D[Cold Data Cache Disk Storage Pool]
-        E[Tape Storage Pool as Next Storage Pool]
-    end
-    
-    subgraph TL["Tape Library"]
-        F[Tape Drives]
-        G[Tape Volumes]
-    end
-    
-    A --> B
-    B -->|Archive via S3 Glacier Storage Class| C
-    C -->|Store Temporarily| D
-    D -->|Migrate| E
-    E -->|Write| F
-    F -->|Store| G
-    
-    G -.->|Restore Request| F
-    F -.->|Recall| E
-    E -.->|Stage| D
-    D -.->|Retrieve via S3| C
-    C -.->|Restore| B
-    
+    style OUTER fill:#ffffff,stroke:#cccccc,stroke-width:2px
     style A fill:#f0f9ff
     style B fill:#f0f9ff
     style C fill:#fffaf0
@@ -236,16 +242,42 @@ The following are some use cases that the integration of IBM Storage Defender Da
 - Compliance with retention policies
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'sectionBkgColor':'#f0f9ff', 'altSectionBkgColor':'#fffaf0', 'gridColor':'#cccccc', 'todayLineColor':'#ff6666'}}}%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontSize': '13px',
+    'fontFamily': 'arial',
+
+    'background': '#ffffff',
+    'primaryBackground': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondaryColor': '#ffffff',
+    'tertiaryColor': '#ffffff',
+
+    'primaryTextColor': '#2ece83',
+    'secondaryTextColor': '#2ece83',
+    'tertiaryTextColor': '#2ece83',
+    'textColor': '#2ece83',
+
+    'lineColor': '#333333',
+    'gridColor': '#cccccc',
+    'todayLineColor': '#ff6666',
+
+    'sectionBkgColor': '#f0f9ff',
+    'altSectionBkgColor': '#fffaf0'
+  }
+}}%%
 gantt
     title Backup and Archive Strategy
     dateFormat YYYY-MM-DD
+
     section Cluster Disk
-    Daily Backups (90 days)    :active, disk1, 2026-01-01, 90d
+    Daily Backups (90 days) :active, disk1, 2026-01-01, 90d
+
     section Tape Archive
-    Monthly Archive (7 years)  :tape1, 2026-01-01, 2555d
-    Monthly Archive (7 years)  :tape2, 2026-02-01, 2555d
-    Monthly Archive (7 years)  :tape3, 2026-03-01, 2555d
+    Monthly Archive (7 years) :tape1, 2026-01-01, 2555d
+    Monthly Archive (7 years) :tape2, 2026-02-01, 2555d
+    Monthly Archive (7 years) :tape3, 2026-03-01, 2555d
 ```
 
 ### Use Case 2: Migration from IBM Storage Protect Plus to IBM Storage Defender Data Protect
@@ -481,7 +513,38 @@ graph TB
 #### Archive Operation Flow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'actorBkg':'#f0f9ff', 'actorBorder':'#333333', 'actorTextColor':'#333333', 'actorLineColor':'#333333', 'noteBkgColor':'#fffaf0', 'noteBorderColor':'#cccccc', 'signalColor':'#333333', 'signalTextColor':'#333333'}}}%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontSize': '13px',
+    'fontFamily': 'arial',
+
+    'background': '#ffffff',
+    'primaryBackground': '#ffffff',
+    'mainBkg': '#ffffff',
+
+    'primaryTextColor': '#2ece83',
+    'secondaryTextColor': '#2ece83',
+    'tertiaryTextColor': '#2ece83',
+    'textColor': '#2ece83',
+
+    'lineColor': '#2ece83',
+    'signalColor': '#2ece83',
+    'signalTextColor': '#2ece83',
+
+    'actorBkg': '#f0f9ff',
+    'actorBorder': '#333333',
+    'actorTextColor': '#222222',
+    'actorLineColor': '#2ece83',
+
+    'noteBkgColor': '#fffaf0',
+    'noteBorderColor': '#3e3636',
+    'noteTextColor': '#222222',
+
+    'labelColor': '#222222',
+    'edgeLabelBackground': '#ffffff'
+  }
+}}%%
 sequenceDiagram
     participant DP as Storage Defender Data Protect Cluster
     participant OA as Storage Protect Object Agent
@@ -511,7 +574,38 @@ sequenceDiagram
 #### Restore Operation Flow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'actorBkg':'#f0f9ff', 'actorBorder':'#333333', 'actorTextColor':'#333333', 'actorLineColor':'#333333', 'noteBkgColor':'#fffaf0', 'noteBorderColor':'#cccccc', 'signalColor':'#333333', 'signalTextColor':'#333333'}}}%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontSize': '13px',
+    'fontFamily': 'arial',
+
+    'background': '#ffffff',
+    'primaryBackground': '#ffffff',
+    'mainBkg': '#ffffff',
+
+    'primaryTextColor': '#2ece83',
+    'secondaryTextColor': '#2ece83',
+    'tertiaryTextColor': '#2ece83',
+    'textColor': '#2ece83',
+
+    'lineColor': '#2ece83',
+    'signalColor': '#2ece83',
+    'signalTextColor': '#2ece83',
+
+    'actorBkg': '#f0f9ff',
+    'actorBorder': '#2ece83',
+    'actorTextColor': '#222222',
+    'actorLineColor': '#2ece83',
+
+    'noteBkgColor': '#fffaf0',
+    'noteBorderColor': '#2ece83',
+    'noteTextColor': '#222222',
+
+    'labelColor': '#222222',
+    'edgeLabelBackground': '#ffffff'
+  }
+}}%%
 sequenceDiagram
     participant DP as Storage Defender Data Protect Cluster
     participant OA as Storage Protect Object Agent
@@ -681,7 +775,31 @@ Group VMs using the following criteria, listed in order of priority:
 | Monthly | Tape (via SP) | 7 years | Long-term retention, compliance |
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'sectionBkgColor':'#f0f9ff', 'altSectionBkgColor':'#fffaf0', 'gridColor':'#cccccc', 'todayLineColor':'#ff6666'}}}%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontSize': '13px',
+    'fontFamily': 'arial',
+
+    'background': '#ffffff',
+    'primaryBackground': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondaryColor': '#ffffff',
+    'tertiaryColor': '#ffffff',
+
+    'primaryTextColor': '#2ece83',
+    'secondaryTextColor': '#2ece83',
+    'tertiaryTextColor': '#2ece83',
+    'textColor': '#2ece83',
+
+    'lineColor': '#333333',
+    'gridColor': '#cccccc',
+    'todayLineColor': '#ff6666',
+
+    'sectionBkgColor': '#f0f9ff',
+    'altSectionBkgColor': '#fffaf0'
+  }
+}}%%
 gantt
     title Backup Retention Strategy
     dateFormat YYYY-MM-DD
@@ -1296,6 +1414,7 @@ aws --no-verify-ssl --endpoint-url https://<object agent HLA>:<object agent LLA/
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
     subgraph BG[" "]
+        direction TB
         Start([Start Configuration])
         Start --> SP1a[1.1 Define Cold Data Cache Pool]
         SP1a --> SP1b[1.2 Verify Tape Storage Pool]
@@ -1320,6 +1439,7 @@ flowchart TD
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
     subgraph BG[" "]
+        direction TB
         DP1[Step 2: Data Protect Setup]
         DP1 --> DP1a[2.1 Access Data Protect UI]
         DP1a --> DP1b[2.2 Register External Target]
@@ -1572,6 +1692,7 @@ Annual Requirement: 50 TiB × 12 = 600 TiB
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
     subgraph BG[" "]
+        direction TB
         Start([Start Configuration])
         Start --> SP1a[1.1 Define Cold Data Cache Pool]
         SP1a --> SP1b[1.2 Verify Tape Storage Pool]
@@ -1596,6 +1717,7 @@ flowchart TD
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white'}}}%%
 flowchart TD
     subgraph BG[" "]
+        direction TB
         DP1[Step 2: Data Protect Setup]
         DP1 --> DP1a[2.1 Access Data Protect UI]
         DP1a --> DP1b[2.2 Register External Target]
@@ -1930,7 +2052,35 @@ QUERY VOLHIST TYPE=DBFULL BEGIND=-1
 #### Tape Lifecycle
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'13px', 'fontFamily':'arial', 'background':'white', 'primaryBackground':'white', 'mainBkg':'white', 'nodeBorder':'#333333', 'edgeLabelBackground':'white', 'primaryTextColor':'#333333', 'lineColor':'#333333', 'stateBkg':'#f0f9ff', 'stateEnd':'#333333', 'transitionColor':'#333333', 'labelColor':'#333333', 'attributeBackgroundColorOdd':'#f0f9ff', 'attributeBackgroundColorEven':'#fffaf0'}}}%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontSize': '13px',
+    'fontFamily': 'arial',
+
+    'background': '#ffffff',
+    'primaryBackground': '#ffffff',
+    'mainBkg': '#ffffff',
+
+    'primaryTextColor': '#333333',
+    'secondaryTextColor': '#333333',
+    'tertiaryTextColor': '#333333',
+    'textColor': '#333333',
+
+    'lineColor': '#333333',
+    'edgeLabelBackground': '#ffffff',
+
+    'stateBkg': '#f0f9ff',
+    'stateBorder': '#333333',
+    'stateLabelColor': '#333333',
+
+    'labelColor': '#333333',
+    'transitionColor': '#009b2f',
+
+    'attributeBackgroundColorOdd': '#f0f9ff',
+    'attributeBackgroundColorEven': '#fffaf0'
+  }
+}}%%
 stateDiagram-v2
     [*] --> Scratch: New Tape
     Scratch --> InUse: Assigned to Pool
@@ -2699,7 +2849,7 @@ MAXSCRATCH * 10 GiB
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0 | 2026-08-27 | Dominic Müller-Wicke, Jason Basler, James Damgar | Initial version |
+| 1.0 | 2026-09-10 | Dominic Müller-Wicke, Jason Basler, James Damgar | Initial version |
 
 ---
 
